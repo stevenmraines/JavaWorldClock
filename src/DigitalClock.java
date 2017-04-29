@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
@@ -35,12 +36,7 @@ public class DigitalClock extends JLabel implements Runnable {
 	 */
 	public DigitalClock() {
 		timeZoneString = TimeZone.getDefault().getID();
-		this.setDoubleBuffered(true);
-		localThread.start();
-		this.setOpaque(true);
-		setClockFont();
-		this.setPreferredSize(new Dimension(315, 100));
-		this.setHorizontalAlignment(SwingConstants.CENTER);
+		setup();
 	}
 	
 	/**
@@ -51,12 +47,53 @@ public class DigitalClock extends JLabel implements Runnable {
 	 */
 	public DigitalClock(String timeZoneString) {
 		this.timeZoneString = timeZoneString;
+		setup();
+	}
+	
+	/**
+	 * Initializes certain settings for the JLabel and starts the thread.
+	 */
+	private void setup() {
 		this.setDoubleBuffered(true);
-		localThread.start();
 		this.setOpaque(true);
 		setClockFont();
-		this.setPreferredSize(new Dimension(315, 100));
+		localThread.start();
+	}
+	
+	/**
+	 * Sets the font to a large, green, digital font with
+	 * a black background and sets the size of the component.
+	 */
+	private void setClockFont() {
+		try {
+			if(fontFile.exists()) {
+				clockFont = Font.createFont(Font.TRUETYPE_FONT, fontFile)
+						.deriveFont(Font.PLAIN, 80f);
+				this.setFont(clockFont);
+			}
+		} catch(IOException e) {
+			e.printStackTrace();
+		} catch (FontFormatException e) {
+			e.printStackTrace();
+		}
+		
+		this.setForeground(Color.GREEN);
+		this.setBackground(Color.BLACK);
+		
+		// Figure out JLabel dimensions using font metrics
+		String exampleText = "00:00:00";  // Represents max width of any clock string
+		int maxWidth = 0;
+		clockFontMetrics = getFontMetrics(clockFont);
+		maxWidth = clockFontMetrics.stringWidth(exampleText);
+		Insets inset = this.getInsets();
+		clockSize = new Dimension(maxWidth + inset.left + inset.right,
+	            clockFontMetrics.getHeight() + 20 + inset.top + inset.bottom);
+		this.setPreferredSize(clockSize);
 		this.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		// This empty border is to vertically center the JLabel text
+		// It's a bit hacky, but it should be okay for this
+		this.setBorder(BorderFactory.createEmptyBorder(-20, 0, 0, 0));
 	}
 
 	/**
@@ -91,36 +128,6 @@ public class DigitalClock extends JLabel implements Runnable {
 				e.printStackTrace();
 			}
 		}
-	}
-	
-	/**
-	 * Sets the font to a large, green, digital font with
-	 * a black background and sets the size of the component.
-	 */
-	private void setClockFont() {
-		try {
-			if(fontFile.exists()) {
-				clockFont = Font.createFont(Font.TRUETYPE_FONT, fontFile)
-						.deriveFont(Font.PLAIN, 100f);
-				this.setFont(clockFont);
-			}
-		} catch(IOException e) {
-			e.printStackTrace();
-		} catch (FontFormatException e) {
-			e.printStackTrace();
-		}
-		
-		this.setForeground(Color.GREEN);
-		this.setBackground(Color.BLACK);
-		
-		String exampleText = "00:00:00";  // Represents max width of any clock string
-		int maxWidth = 0;
-		clockFontMetrics = getFontMetrics(clockFont);
-		maxWidth = clockFontMetrics.stringWidth(exampleText);
-		Insets inset = this.getInsets();
-		clockSize = new Dimension(maxWidth + inset.left + inset.right,
-	            clockFontMetrics.getHeight() + 44 + inset.top + inset.bottom);
-		this.setPreferredSize(clockSize);
 	}
 	
 	/**

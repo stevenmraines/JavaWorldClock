@@ -7,14 +7,24 @@ import java.util.TimeZone;
 
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+/**
+ * Java World Clock displays 8 24-hour clocks whose individual time zones
+ * may be set using drop down menus.
+ * 
+ * @author Steven Raines
+ *
+ */
 public class ClockTest {
-	// GUI objects
 	private static JFrame frame = new JFrame("Java World Clock");
 	private static JPanel mainPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
 	private static JPanel[] clockPanels = new JPanel[8];
@@ -27,7 +37,15 @@ public class ClockTest {
 	private static JComboBox<String> timeZoneSelector5 = new JComboBox<String>();
 	private static JComboBox<String> timeZoneSelector6 = new JComboBox<String>();
 	private static JComboBox<String> timeZoneSelector7 = new JComboBox<String>();
+	private static JMenuBar menuBar = new JMenuBar();
+	private static JMenu info = new JMenu("Info");
+	private static JMenuItem about = new JMenuItem("About");
 	
+	/**
+	 * The main method.
+	 * 
+	 * @param args Command line arguments
+	 */
 	public static void main(String[] args) {
 		// Get a list of time zones
 		String[] timeZoneArray = TimeZone.getAvailableIDs();
@@ -100,13 +118,25 @@ public class ClockTest {
 			mainPanel.add(clockPanels[i]);
 		}
 		
+		// Add the menu stuff
+		menuBar.add(info);
+		info.add(about);
+		frame.setJMenuBar(menuBar);
+		about.addActionListener(new MenuActionListener());
+		
 		// Add everything to and setup the JFrame
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add(mainPanel);
-		frame.setSize(580, 520);
+		frame.setSize(580, 540);
 		frame.setVisible(true);
 	}
 
+	/**
+	 * The action listener for the drop down time zone selection menus.
+	 * 
+	 * @author Steven Raines
+	 *
+	 */
 	private static class SelectorActionListener implements ActionListener {
 		@SuppressWarnings("unchecked")
 		@Override
@@ -138,5 +168,18 @@ public class ClockTest {
 				clocks[7].setTimeZoneString(jcb.getSelectedItem().toString());
 			}
 		}		
+	}
+	
+	/**
+	 * The action listener for the menu bar of the program.
+	 * 
+	 * @author Steven Raines
+	 *
+	 */
+	private static class MenuActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			JOptionPane.showMessageDialog(null, "Created by: Steven Raines\n"
+					+ "Version: 1.0");
+		}
 	}
 }
