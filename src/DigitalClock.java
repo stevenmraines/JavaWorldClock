@@ -29,23 +29,29 @@ public class DigitalClock extends JLabel implements Runnable {
 	private Font clockFont;
 	private FontMetrics clockFontMetrics;
 	private Dimension clockSize;
+	private Color fontColor;
 	
 	/**
-	 * Default No-arg constructor. The time zone is set to match
+	 * Initializes a clock with a specific font color. The time zone is set to match
 	 * the default time zone of the computer.
+	 * 
+	 * @param fontColor the color of the clock font.
 	 */
-	public DigitalClock() {
+	public DigitalClock(Color fontColor) {
+		this.fontColor = fontColor;
 		timeZoneString = TimeZone.getDefault().getID();
 		setup();
 	}
 	
 	/**
-	 * The time zone constructor allows you to specify a starting time zone
-	 * for the clock.
+	 * Allows you to specify a starting time zone for the clock as well as
+	 * a specific font color.
 	 * 
+	 * @param fontColor the color of the clock font.
 	 * @param timeZoneString a string representing the time zone of the clock.
 	 */
-	public DigitalClock(String timeZoneString) {
+	public DigitalClock(Color fontColor, String timeZoneString) {
+		this.fontColor = fontColor;
 		this.timeZoneString = timeZoneString;
 		setup();
 	}
@@ -77,7 +83,7 @@ public class DigitalClock extends JLabel implements Runnable {
 			e.printStackTrace();
 		}
 		
-		this.setForeground(Color.GREEN);
+		this.setForeground(fontColor);
 		this.setBackground(Color.BLACK);
 		
 		// Figure out JLabel dimensions using font metrics

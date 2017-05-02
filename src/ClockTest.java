@@ -73,9 +73,14 @@ public class ClockTest {
 		timeZoneSelector7.addActionListener(new SelectorActionListener());
 		
 		// Create the clocks
-		for(int i = 0; i < clocks.length; i++) {
-			clocks[i] = new DigitalClock();
-		}
+		clocks[0] = new DigitalClock(Color.RED);
+		clocks[1] = new DigitalClock(Color.ORANGE);
+		clocks[2] = new DigitalClock(Color.YELLOW);
+		clocks[3] = new DigitalClock(Color.GREEN);
+		clocks[4] = new DigitalClock(Color.BLUE);
+		clocks[5] = new DigitalClock(new Color(75, 0, 130));
+		clocks[6] = new DigitalClock(new Color(128, 0, 128));
+		clocks[7] = new DigitalClock(Color.PINK);
 		
 		// Set the current items in the lists as the current time zones of the clocks
 		timeZoneSelector0.setSelectedItem(clocks[0].getTimeZoneString());
